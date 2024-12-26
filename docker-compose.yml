@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  ollama:
+    container_name: ollama
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    volumes:
+      - "./ollamadata:/root/.ollama"  # Adjust path as needed for model persistence
+    ports:
+      - 11434:11434  # Exposes port for Ollama API
+    healthcheck:
+      test: ["CMD", "ollama", "list"]  # Ensure Ollama is up and running
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
+    networks:
+      - ollama_network
+
+  ollama-models-pull:
+    container_name: ollama-models-pull
+    image: curlimages/curl:latest  # Use a basic image with curl
+    command: >
+      curl -X POST http://ollama:11434/api/pull -d '{"name":"llama3.2"}'  # Pull the llama3.2 model
+    depends_on:
+      ollama:
+        condition: service_healthy  # Ensure Ollama is healthy before pulling models
+    networks:
+      - ollama_network
+
+  chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Ensure you have a Dockerfile in the project root
+    volumes:
+      - ./chroma_storage:/app/chroma_storage  # Maps local chroma_storage to the container
+      - ./chroma_db:/app/chroma_db  # Maps local chroma_db to the container
+    ports:
+      - "8501:8501"  # Expose Streamlit app on port 8501
+    environment:
+      - STREAMLIT_SERVER_PORT=8501  # Environment variables for Streamlit
+    networks:
+      - ollama_network  # Connect chatbot to the ollama_network explicitly
+
+networks:
+  ollama_network:
+    driver: bridge  # Use a bridge network for communication between services
