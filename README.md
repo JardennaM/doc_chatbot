@@ -27,7 +27,8 @@ docker build
 docker-compose up
 ```
 
-### 3. Access the application 
+### 3. Access the application
+Paste the following in your browser:
 ```bash
 http://localhost:8501
 ```
