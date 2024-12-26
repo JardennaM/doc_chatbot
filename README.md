@@ -6,7 +6,7 @@ A chatbot application that allows users to upload PDF documents, process them, a
 
 Before you can run the Docker container, make sure you have the following installed on your machine:
 
-- **[Docker](https://docs.docker.com/get-docker/)**: Follow the installation instructions for your platform.
+- **[Docker](https://docs.docker.com/get-docker/)**: Follow the installation instructions for your platform. Leave it running in the background. You possible need to add the path to your ~/.zshrc.
 - **[Docker Compose](https://docs.docker.com/compose/install/)** (optional but recommended): For managing multi-container Docker applications.
 
 ## Setup Instructions
