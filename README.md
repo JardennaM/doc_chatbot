@@ -23,7 +23,7 @@ cd doc_chatbot
 ### 2. Build the app
 
 ```bash
-docker build
+docker-compose build
 docker-compose up
 ```
 
